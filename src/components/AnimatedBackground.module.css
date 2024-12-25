@@ -1,0 +1,69 @@
+.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    overflow: hidden;
+    background-color: #0f172a;
+  }
+  
+  .layer1,
+  .layer2,
+  .layer3 {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    right: -50%;
+    bottom: -50%;
+    background-size: 200% 200%;
+    opacity: 0.3;
+    filter: blur(50px);
+  }
+  
+  .layer1 {
+    background-image: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.5) 0%, transparent 70%),
+                      radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.5) 0%, transparent 70%);
+    animation: pulse 15s infinite alternate;
+  }
+  
+  .layer2 {
+    background-image: radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.5) 0%, transparent 70%),
+                      radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.5) 0%, transparent 70%);
+    animation: pulse 20s infinite alternate-reverse;
+  }
+  
+  .layer3 {
+    background: linear-gradient(45deg, 
+      rgba(59, 130, 246, 0.2),
+      rgba(139, 92, 246, 0.2),
+      rgba(236, 72, 153, 0.2),
+      rgba(99, 102, 241, 0.2)
+    );
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+  
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  

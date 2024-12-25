@@ -1,0 +1,205 @@
+/* eslint-disable */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* eslint-enable */
+
+:root {
+  --primary: #3B82F6;
+  --secondary: #8B5CF6;
+  --background: #111827;
+  --text: #F3F4F6;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.gradient-text {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.icon-button {
+  @apply p-2 rounded-lg transition-all duration-300 hover:bg-blue-500/20 hover:text-blue-400;
+}
+
+.animated-background {
+  @apply fixed inset-0 -z-10 opacity-50;
+}
+
+.section-container {
+  @apply min-h-screen flex items-center justify-center py-20;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.float-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary);
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus Styles */
+*:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Responsive Typography */
+html {
+  font-size: 16px;
+}
+
+@media (min-width: 640px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 1024px) {
+  html {
+    font-size: 20px;
+  }
+}
+
+/* Additional styles for improved spacing and visual appeal */
+.container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+section {
+  @apply py-20 min-h-screen flex flex-col justify-center;
+}
+
+h2 {
+  @apply text-3xl sm:text-4xl font-bold mb-8 text-center;
+}
+
+.card {
+  @apply bg-gray-800 rounded-lg shadow-lg p-6 transition-all duration-300 hover:shadow-xl;
+}
+
+.button {
+  @apply px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors;
+}
+
+/* Improved spacing for navigation */
+.nav-item {
+  @apply mx-2 py-2 px-3 rounded-md transition-colors;
+}
+
+/* Enhanced visual appeal for skill tags */
+.skill-tag {
+  @apply inline-block bg-gray-700 text-sm rounded-full px-3 py-1 m-1;
+}
+
+/* Project card enhancements */
+.project-card {
+  @apply flex flex-col h-full;
+}
+
+.project-card-body {
+  @apply flex-grow;
+}
+
+/* Publication styling */
+.publication {
+  @apply border-l-4 border-blue-500 pl-4 my-4;
+}
+
+/* Contact form improvements */
+.form-input {
+  @apply w-full px-3 py-2 bg-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    @apply px-4;
+  }
+  
+  h2 {
+    @apply text-2xl sm:text-3xl;
+  }
+}
+
+/* Animation classes */
+.fade-in {
+  @apply transition-opacity duration-500 ease-in-out;
+}
+
+.slide-up {
+  @apply transition-all duration-500 ease-in-out transform;
+}
+
+/* Additional utility classes */
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600;
+}
+
+.glassmorphism {
+  @apply bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg;
+}
+
+/* Ensure proper spacing between sections */
+section + section {
+  @apply mt-32;
+}
+
+/* Enhance footer styling */
+footer {
+  @apply mt-20 py-8 border-t border-gray-800;
+}
+
+/* Mobile-friendly adjustments */
+@media (max-width: 640px) {
+  .nav-item {
+    @apply mx-1 py-1 px-2;
+  }
+
+  .skill-tag {
+    @apply text-xs px-2 py-0.5;
+  }
+
+  .project-card {
+    @apply flex-col;
+  }
+}
+
