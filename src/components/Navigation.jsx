@@ -14,7 +14,7 @@ const Navigation = ({ currentSection, onNavigate }) => {
   ];
 
   return (
-    <nav className="fixed right-8 top-1/2 transform -translate-y-1/2 z-40">
+    <nav className="fixed right-4 top-1/2 transform -translate-y-1/2 z-40">
       <ul className="space-y-4">
         {navItems.map(({ id, icon: Icon, label }) => (
           <motion.li
@@ -29,8 +29,8 @@ const Navigation = ({ currentSection, onNavigate }) => {
               }`}
               aria-label={label}
             >
-              <Icon className="w-6 h-6" />
-              <span className="absolute right-full mr-2 px-2 py-1 bg-black bg-opacity-80 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
+              <Icon className="w-6 h-6 md:w-8 md:h-8" />
+              <span className="absolute left-full ml-2 px-2 py-1 bg-black bg-opacity-80 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-sm">
                 {label}
               </span>
             </button>

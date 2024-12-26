@@ -4,6 +4,22 @@
 @tailwind utilities;
 /* eslint-enable */
 
+/* Make text non-selectable */
+body {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Allow text selection in the contact form inputs */
+input, textarea {
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
 :root {
   --primary: #3B82F6;
   --secondary: #8B5CF6;
@@ -158,6 +174,78 @@ h2 {
   h2 {
     @apply text-2xl sm:text-3xl;
   }
+
+  /* Adjust spacing for mobile */
+  section {
+    @apply py-16 min-h-[calc(100vh-4rem)];
+  }
+
+  /* Reduce font size for mobile */
+  body {
+    font-size: 14px;
+  }
+
+  /* Adjust button sizes for mobile */
+  .button {
+    @apply px-4 py-2 text-sm;
+  }
+
+  /* Adjust card padding for mobile */
+  .card {
+    @apply p-4;
+  }
+
+  /* Adjust skill tags for mobile */
+  .skill-tag {
+    @apply text-xs px-2 py-0.5 m-0.5;
+  }
+
+  /* Adjust project cards for mobile */
+  .project-card {
+    @apply flex-col;
+  }
+
+  /* Adjust form inputs for mobile */
+  .form-input {
+    @apply text-sm;
+  }
+
+  /* Improve touch targets for mobile */
+  button, 
+  a, 
+  .nav-item,
+  .icon-button {
+    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+  }
+
+  /* Adjust navigation for mobile */
+  .nav-item {
+    @apply block w-full text-center py-2;
+  }
+
+  /* Ensure proper spacing between sections on mobile */
+  section + section {
+    @apply mt-16;
+  }
+
+  /* Enhance mobile menu */
+  .mobile-menu {
+    @apply fixed inset-0 bg-gray-900 bg-opacity-95 z-50 flex flex-col items-center justify-center;
+  }
+
+  .mobile-menu-item {
+    @apply text-2xl py-4 px-6 hover:text-blue-400 transition-colors;
+  }
+
+  /* Improve readability on mobile */
+  p, li {
+    @apply leading-relaxed;
+  }
+
+  /* Adjust image sizes for mobile */
+  img {
+    @apply max-w-full h-auto;
+  }
 }
 
 /* Animation classes */
@@ -201,5 +289,46 @@ footer {
   .project-card {
     @apply flex-col;
   }
+
+  /* Improve form usability on small screens */
+  input, textarea, select {
+    @apply text-base; /* Increase font size for better readability */
+  }
+
+  /* Adjust button sizing for easier tapping */
+  .button {
+    @apply py-3 px-5;
+  }
 }
 
+/* Prevent content from being hidden under fixed header on anchor link navigation */
+:target {
+  scroll-margin-top: 4rem;
+}
+
+/* Improve accessibility */
+.sr-only {
+  @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+}
+
+/* Add smooth transition for hover effects */
+a, button {
+  @apply transition-all duration-200;
+}
+
+/* Enhance mobile navigation */
+@media (max-width: 768px) {
+  .mobile-nav-active {
+    @apply overflow-hidden;
+  }
+
+  .mobile-nav-active .mobile-menu {
+    @apply translate-x-0;
+  }
+}
+@media screen and (max-width: 768px) {
+  body {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+}

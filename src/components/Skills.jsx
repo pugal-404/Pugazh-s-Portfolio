@@ -2,18 +2,18 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const skillsData = [
-  { category: 'Blockchain', skills: ['Solidity', 'Ethereum', 'Smart Contracts', 'Web3.js', 'Truffle', 'Hardhat']},
-  { category: 'Frontend Development', skills: ['React', 'Next.js', 'JavaScript', 'Tailwind CSS', 'Three.js'] },
-  { category: 'Backend Development', skills: ['Node.js', 'Express', 'Python', 'Django', 'FastAPI'] },
-  { category: 'Databases', skills: ['MongoDB', 'PostgreSQL', 'MySQL', 'Redis'] },
-  { category: 'DevOps & Tools', skills: ['Git', 'Docker', 'AWS', 'CI/CD', 'Agile Methodologies'] },
-  { category: 'AI & Machine Learning', skills: ['TensorFlow', 'PyTorch', 'Scikit-learn', 'Natural Language Processing'] },
+  { category: 'Blockchain', skills: ['Ganache', 'Ethereum', 'Smart Contracts', 'Metamask']},
+  { category: 'Frontend Development', skills: ['React.js', 'JavaScript','Three.js', 'Tailwind CSS','Bootstrap'] },
+  { category: 'Backend Development', skills: ['Node.js', 'Express', 'Python', 'FastAPI'] },
+  { category: 'Databases', skills: ['MySQL', 'SQL'] },
+  { category: 'DevOps & Tools', skills: ['Git', 'Docker', 'AWS S3', 'CI/CD'] },
+  { category: 'AI & Machine Learning', skills: ['Numpy', 'Pandas','TensorFlow', 'Scikit-learn', 'OpenCV'] },
 ];
 
 const Skills = () => {
   return (
     <section id="skills" className="min-h-screen flex items-center justify-center py-20">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto px-4">
         <motion.h2
           className="text-4xl font-bold mb-12 text-center"
           initial={{ opacity: 0, y: 20 }}
@@ -31,11 +31,19 @@ const Skills = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1, duration: 0.8 }}
               whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(59, 130, 246, 0.5)" }}
+              whileTap={{ scale: 0.95 }}
             >
               <h3 className="text-2xl font-bold mb-4">{category.category}</h3>
               <ul className="list-disc list-inside">
                 {category.skills.map((skill) => (
-                  <li key={skill} className="mb-2">{skill}</li>
+                  <motion.li
+                    key={skill}
+                    className="mb-2 cursor-pointer"
+                    whileHover={{ scale: 1.05, color: "#3B82F6" }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {skill}
+                  </motion.li>
                 ))}
               </ul>
             </motion.div>

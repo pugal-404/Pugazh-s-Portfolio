@@ -36,7 +36,7 @@ const Home = () => {
           transition={{ delay: 0.6, duration: 0.8 }}
         >
           <a
-            href="https://github.com/pugazholi-r"
+            href="https://github.com/pugal-404"
             target="_blank"
             rel="noopener noreferrer"
             className="text-white hover:text-blue-400 transition-colors"
