@@ -184,9 +184,8 @@ npm run lint
 5. Open a Pull Request
 
 
-## 📄 License
-
-This project is licensed under the MIT License.
+## License
+All rights reserved. Unauthorized copying, modification, or distribution of this software is strictly prohibited.
 
 ## 👤 Contact
 
