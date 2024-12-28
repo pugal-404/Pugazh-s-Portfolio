@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, Send, CheckCircle, AlertCircle, ChevronDown } from 'lucide-react';
 
+const FORM_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT;
+
 const countryCodes = [
   { code: '+1', flag: '🇺🇸', name: 'United States' },
   { code: '+44', flag: '🇬🇧', name: 'United Kingdom' },
@@ -47,26 +49,33 @@ const Contact = () => {
     setStatus({ loading: true, success: false, error: null });
 
     try {
-      const response = await fetch('/api/contact', {
+      const fullPhone = `${formData.countryCode}${formData.phone}`;
+      
+      const response = await fetch(FORM_ENDPOINT, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify({
-          ...formData,
-          phone: `${formData.countryCode}${formData.phone}`
+          name: formData.name,
+          email: formData.email,
+          phone: fullPhone,
+          message: formData.message
         }),
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setStatus({ loading: false, success: true, error: null });
-        setFormData({ name: '', email: '', countryCode: '+1', phone: '', message: '' });
-        setTimeout(() => {
-          setStatus(prev => ({ ...prev, success: false }));
-        }, 5000);
-      } else {
-        throw new Error(data.message || 'Failed to send message');
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to send message');
       }
+
+      setStatus({ loading: false, success: true, error: null });
+      setFormData({ name: '', email: '', countryCode: '+1', phone: '', message: '' });
+      
+      setTimeout(() => {
+        setStatus(prev => ({ ...prev, success: false }));
+      }, 5000);
     } catch (error) {
       console.error('Contact form submission error:', error);
       setStatus({
@@ -74,6 +83,7 @@ const Contact = () => {
         success: false,
         error: error.message || 'An unexpected error occurred. Please try again.'
       });
+      
       setTimeout(() => {
         setStatus(prev => ({ ...prev, error: null }));
       }, 5000);
