@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import Image from 'next/image';
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -38,7 +39,7 @@ const Header = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <img src="/favicon.ico" alt="Pugazholi R" className="w-8 h-8" />
+          <Image src="/favicon.ico" alt="Pugazholi R" width={32} height={32} />
         </motion.a>
         <nav className="hidden md:block">
           <ul className="flex space-x-6">
@@ -100,3 +101,4 @@ const Header = () => {
 };
 
 export default Header;
+

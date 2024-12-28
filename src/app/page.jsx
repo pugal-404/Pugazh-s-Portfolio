@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { motion, useScroll, useSpring } from 'framer-motion'
 import Header from '../components/Header'
 import Navigation from '../components/Navigation'
@@ -23,15 +23,23 @@ export default function Page() {
     restDelta: 0.001
   })
 
-  const sectionRefs = {
-    home: useRef(null),
-    about: useRef(null),
-    skills: useRef(null),
-    projects: useRef(null),
-    publications: useRef(null),
-    learning: useRef(null),
-    contact: useRef(null),
-  }
+  const homeRef = useRef(null)
+  const aboutRef = useRef(null)
+  const skillsRef = useRef(null)
+  const projectsRef = useRef(null)
+  const publicationsRef = useRef(null)
+  const learningRef = useRef(null)
+  const contactRef = useRef(null)
+
+  const sectionRefs = useMemo(() => ({
+    home: homeRef,
+    about: aboutRef,
+    skills: skillsRef,
+    projects: projectsRef,
+    publications: publicationsRef,
+    learning: learningRef,
+    contact: contactRef,
+  }), [homeRef, aboutRef, skillsRef, projectsRef, publicationsRef, learningRef, contactRef])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,7 +55,7 @@ export default function Page() {
 
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [sectionRefs])
 
   const handleNavigation = (section) => {
     sectionRefs[section].current.scrollIntoView({ behavior: 'smooth' })
@@ -63,13 +71,13 @@ export default function Page() {
         style={{ scaleX }}
       />
       <main className="relative z-10 container mx-auto px-4 py-20 space-y-32 sm:space-y-40 md:space-y-48 lg:space-y-56">
-        <section ref={sectionRefs.home} id="home"><Home /></section>
-        <section ref={sectionRefs.about} id="about"><About /></section>
-        <section ref={sectionRefs.skills} id="skills"><Skills /></section>
-        <section ref={sectionRefs.projects} id="projects"><Projects /></section>
-        <section ref={sectionRefs.publications} id="publications"><Publications /></section>
-        <section ref={sectionRefs.learning} id="learning"><Learning /></section>
-        <section ref={sectionRefs.contact} id="contact"><Contact /></section>
+        <section ref={homeRef} id="home"><Home /></section>
+        <section ref={aboutRef} id="about"><About /></section>
+        <section ref={skillsRef} id="skills"><Skills /></section>
+        <section ref={projectsRef} id="projects"><Projects /></section>
+        <section ref={publicationsRef} id="publications"><Publications /></section>
+        <section ref={learningRef} id="learning"><Learning /></section>
+        <section ref={contactRef} id="contact"><Contact /></section>
       </main>
       <Footer />
     </div>
