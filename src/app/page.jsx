@@ -62,7 +62,7 @@ export default function Page() {
   }
 
   return (
-    <div className="relative min-h-screen bg-transparent text-white overflow-hidden">
+    <div className="relative min-h-screen bg-transparent text-white">
       <AnimatedBackground />
       <Header />
       <Navigation currentSection={currentSection} onNavigate={handleNavigation} />
@@ -71,13 +71,13 @@ export default function Page() {
         style={{ scaleX }}
       />
       <main className="relative z-10 container mx-auto px-4 py-20 space-y-32 sm:space-y-40 md:space-y-48 lg:space-y-56">
-        <section ref={homeRef} id="home"><Home /></section>
-        <section ref={aboutRef} id="about"><About /></section>
-        <section ref={skillsRef} id="skills"><Skills /></section>
-        <section ref={projectsRef} id="projects"><Projects /></section>
-        <section ref={publicationsRef} id="publications"><Publications /></section>
-        <section ref={learningRef} id="learning"><Learning /></section>
-        <section ref={contactRef} id="contact"><Contact /></section>
+        <section ref={homeRef} id="home" className="min-h-screen"><Home /></section>
+        <section ref={aboutRef} id="about" className="min-h-screen py-16"><About /></section>
+        <section ref={skillsRef} id="skills" className="min-h-screen py-16"><Skills /></section>
+        <section ref={projectsRef} id="projects" className="min-h-screen py-16"><Projects /></section>
+        <section ref={publicationsRef} id="publications" className="min-h-screen py-16"><Publications /></section>
+        <section ref={learningRef} id="learning" className="min-h-screen py-16"><Learning /></section>
+        <section ref={contactRef} id="contact" className="min-h-screen py-16"><Contact /></section>
       </main>
       <Footer />
     </div>

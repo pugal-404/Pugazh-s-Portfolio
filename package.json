@@ -9,13 +9,17 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@react-three/drei": "^9.80.1",
+        "@react-three/fiber": "^8.13.6",
         "critters": "^0.0.20",
         "framer-motion": "^10.12.16",
         "lucide-react": "^0.241.0",
         "next": "^15.1.2",
         "nodemailer": "^6.9.3",
         "react": "18.2.0",
-        "react-dom": "18.2.0"
+        "react-dom": "18.2.0",
+        "react-error-boundary": "^5.0.0",
+        "three": "^0.154.0"
     },
     "devDependencies": {
         "@types/node": "20.3.1",
