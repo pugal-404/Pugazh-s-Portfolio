@@ -94,7 +94,8 @@ export default function AvatarExperience() {
   const animationFrameRef = useRef(null);
   const currentActionRef = useRef(null);
   const audioRef = useRef(null);
-  const modelLoadedRef = useRef(false);
+  const controlsRef = useRef(null);
+  const isInitializedRef = useRef(false);
 
   const [loading, setLoading] = useState(true);
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -136,8 +137,48 @@ export default function AvatarExperience() {
     scene.add(ambientLight);
   }, []);
 
+  const cleanup = useCallback(() => {
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+
+    if (controlsRef.current) {
+      controlsRef.current.dispose();
+      controlsRef.current = null;
+    }
+
+    if (rendererRef.current && containerRef.current) {
+      containerRef.current.removeChild(rendererRef.current.domElement);
+      rendererRef.current.dispose();
+      rendererRef.current = null;
+    }
+
+    if (mixerRef.current) {
+      mixerRef.current.stopAllAction();
+      mixerRef.current = null;
+    }
+
+    if (sceneRef.current) {
+      sceneRef.current.clear();
+      sceneRef.current = null;
+    }
+
+    if (modelRef.current) {
+      modelRef.current = null;
+    }
+
+    actionsRef.current.clear();
+    currentActionRef.current = null;
+    isInitializedRef.current = false;
+  }, []);
+
   const setupScene = useCallback(() => {
-    if (!containerRef.current) return null;
+    if (!containerRef.current || sceneRef.current) return null;
+
+    // Force a layout reflow to ensure container dimensions are available
+    containerRef.current.offsetHeight;
+    containerRef.current.offsetWidth;
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(CONFIG.BACKGROUND_COLOR);
@@ -184,16 +225,14 @@ export default function AvatarExperience() {
     controls.enablePan = false;
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.rotateSpeed = 0.5;
+    controls.rotateSpeed = 1;
     controls.minPolarAngle = Math.PI / 2;
     controls.maxPolarAngle = Math.PI / 2;
     controls.target.set(target.x, target.y, target.z);
-
-    controls.addEventListener('change', () => {
-      controls.target.set(target.x, target.y, target.z);
-    });
+    controlsRef.current = controls;
 
     setupLighting(scene);
+    isInitializedRef.current = true;
 
     return controls;
   }, [setupLighting]);
@@ -243,16 +282,14 @@ export default function AvatarExperience() {
   }, []);
 
   const loadModel = useCallback(async () => {
-    if (modelLoadedRef.current) return;
-    modelLoadedRef.current = true;
-    if (!sceneRef.current) return;
-
-    const loader = new GLTFLoader();
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('/draco/');
-    loader.setDRACOLoader(dracoLoader);
+    if (!sceneRef.current || modelRef.current) return;
 
     try {
+      const loader = new GLTFLoader();
+      const dracoLoader = new DRACOLoader();
+      dracoLoader.setDecoderPath('/draco/');
+      loader.setDRACOLoader(dracoLoader);
+
       const gltf = await loader.loadAsync(
         CONFIG.MODEL_PATH,
         (event) => {
@@ -261,8 +298,25 @@ export default function AvatarExperience() {
         }
       );
 
+      if (!sceneRef.current) {
+        // Scene was cleaned up while loading, dispose of the loaded model
+        gltf.scene.traverse((object) => {
+          if (object.isMesh) {
+            object.geometry.dispose();
+            if (object.material.isMaterial) {
+              cleanMaterial(object.material);
+            } else {
+              for (const material of object.material) cleanMaterial(material);
+            }
+          }
+        });
+        return;
+      }
+
+      if (!sceneRef.current) return; // Scene was cleaned up while loading
+
       const model = gltf.scene;
-      const containerWidth = containerRef.current.clientWidth;
+      const containerWidth = containerRef.current?.clientWidth || window.innerWidth;
       const currentDevice = getDeviceType(containerWidth);
       
       const scale = CONFIG.MODEL.SCALE[currentDevice];
@@ -288,8 +342,11 @@ export default function AvatarExperience() {
       mixerRef.current = mixer;
 
       await loadAnimations(mixer);
-      playAnimation('Idle');
-      setLoading(false);
+      
+      if (mixerRef.current) { // Check if component is still mounted
+        playAnimation('Idle');
+        setLoading(false);
+      }
     } catch (error) {
       console.error('Error loading model:', error);
       setError('Failed to load the 3D model. Please try refreshing the page.');
@@ -297,10 +354,17 @@ export default function AvatarExperience() {
     }
   }, [loadAnimations, playAnimation]);
 
-  const animate = useCallback((controls) => {
-    if (!sceneRef.current || !cameraRef.current || !rendererRef.current) return;
+  const animate = useCallback(() => {
+    if (!sceneRef.current || !cameraRef.current || !rendererRef.current || !controlsRef.current) return;
+
+    // Cancel any existing animation frame
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
 
     const animateFrame = () => {
+      if (!sceneRef.current) return; // Stop animation if scene is cleaned up
+      
       animationFrameRef.current = requestAnimationFrame(animateFrame);
       
       if (mixerRef.current) {
@@ -308,14 +372,14 @@ export default function AvatarExperience() {
         mixerRef.current.update(delta);
       }
       
-      controls.update();
+      controlsRef.current.update();
       rendererRef.current.render(sceneRef.current, cameraRef.current);
     };
 
     animateFrame();
   }, []);
 
-  const handleResize = useCallback(() => {
+ const handleResize = useCallback(() => {
     if (!containerRef.current || !cameraRef.current || !rendererRef.current) return;
     
     const width = containerRef.current.clientWidth;
@@ -345,35 +409,22 @@ export default function AvatarExperience() {
   }, []);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-    const controls = setupScene();
-    const container = containerRef.current;
-  
-    if (controls) {
-      loadModel();
-      animate(controls);
-      window.addEventListener('resize', handleResize);
-  
-      return () => {
-        window.removeEventListener('resize', handleResize);
-        if (animationFrameRef.current) {
-          cancelAnimationFrame(animationFrameRef.current);
-        }
-        controls.dispose();
-  
-        if (rendererRef.current && container) {
-          container.removeChild(rendererRef.current.domElement);
-          rendererRef.current.dispose();
-        }
-        if (mixerRef.current) {
-          mixerRef.current.stopAllAction();
-        }
-        if (sceneRef.current) {
-          sceneRef.current.clear();
-        }
-      };
+    // Initialize only once when the component mounts
+    if (!isInitializedRef.current && containerRef.current) {
+      const controls = setupScene();
+      if (controls) {
+        loadModel();
+        animate();
+      }
     }
-  }, [setupScene, loadModel, animate, handleResize]);
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cleanup();
+    };
+  }, [setupScene, loadModel, animate, handleResize, cleanup]);
 
   useEffect(() => {
     const audio = new Audio(CONFIG.AUDIO.GUNSHOT);
@@ -398,48 +449,24 @@ export default function AvatarExperience() {
       if (document.hidden) {
         if (animationFrameRef.current) {
           cancelAnimationFrame(animationFrameRef.current);
+          animationFrameRef.current = null;
         }
       } else {
-        const position = CONFIG.CAMERA.POSITION[deviceType];
-        const target = CONFIG.CAMERA.TARGET[deviceType];
-        
-        if (cameraRef.current) {
-          cameraRef.current.position.set(position.x, position.y, position.z);
-          cameraRef.current.lookAt(new THREE.Vector3(target.x, target.y, target.z));
-          cameraRef.current.updateProjectionMatrix();
+        // Reinitialize the scene when the tab becomes visible
+        cleanup();
+        const controls = setupScene();
+        if (controls) {
+          loadModel();
+          animate();
         }
-        
-        if (modelRef.current) {
-          const modelPosition = CONFIG.MODEL.POSITION[deviceType];
-          modelRef.current.position.set(modelPosition.x, modelPosition.y, modelPosition.z);
-        }
-        
-        const newControls = new OrbitControls(cameraRef.current, rendererRef.current.domElement);
-        newControls.enableDamping = true;
-        newControls.dampingFactor = 0.05;
-        newControls.enableZoom = false;
-        newControls.enablePan = false;
-        newControls.rotateSpeed = 0.5;
-        newControls.minPolarAngle = Math.PI / 2;
-        newControls.maxPolarAngle = Math.PI / 2;
-        newControls.target.set(target.x, target.y, target.z);
-        
-        newControls.addEventListener('change', () => {
-          newControls.target.set(target.x, target.y, target.z);
-        });
-        
-        animate(newControls);
       }
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
     };
-  }, [animate, deviceType]);
+  }, [cleanup, setupScene, loadModel, animate]);
 
   const handleGunshoot = useCallback(() => {
     if (audioRef.current && audioLoaded) {
@@ -456,6 +483,15 @@ export default function AvatarExperience() {
     anchor.click();
     document.body.removeChild(anchor);
   }, [playAnimation, audioLoaded]);
+
+  const cleanMaterial = (material) => {
+    if (material.map) material.map.dispose();
+    if (material.normalMap) material.normalMap.dispose();
+    if (material.roughnessMap) material.roughnessMap.dispose();
+    if (material.metalnessMap) material.metalnessMap.dispose();
+    if (material.aoMap) material.aoMap.dispose();
+    material.dispose();
+  };
 
   return (
     <div className={styles.container}>
