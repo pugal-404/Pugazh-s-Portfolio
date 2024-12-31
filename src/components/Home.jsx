@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail } from 'lucide-react';
+import { Github, Linkedin, Mail, BookOpen } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
 const AvatarExperience = dynamic(() => import('./AvatarExperience'), { ssr: false });
@@ -68,6 +68,14 @@ const Home = () => {
             className="text-white hover:text-blue-400 transition-colors"
           >
             <Mail size={24} />
+          </a>
+          <a
+            href="https://medium.com/@pugazhragu226"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white hover:text-blue-400 transition-colors"
+          >
+            <BookOpen size={24} />
           </a>
         </motion.div>
       </motion.div>

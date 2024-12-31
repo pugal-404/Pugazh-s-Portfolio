@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, Send, CheckCircle, AlertCircle, ChevronDown } from 'lucide-react';
 
-const FORM_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT;
+// Use the public Formspree endpoint directly in the component
+const FORM_ENDPOINT = "https://formspree.io/f/mjkkrkyp";
 
 const countryCodes = [
   { code: '+1', flag: '🇺🇸', name: 'United States' },
@@ -140,7 +141,7 @@ const Contact = () => {
             </label>
             <motion.input
               whileFocus={{ scale: 1.01 }}
-              type="email"
+              type="text"
               id="email"
               name="email"
               value={formData.email}

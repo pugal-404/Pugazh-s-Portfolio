@@ -50,6 +50,9 @@ const nextConfig = {
   trailingSlash: true,
   // Ensure we're not trying to use API routes in static export
   skipMiddlewareUrlNormalize: true,
+  env: {
+    NEXT_PUBLIC_FORMSPREE_ENDPOINT: process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT,
+  }
 }
 
 module.exports = nextConfig

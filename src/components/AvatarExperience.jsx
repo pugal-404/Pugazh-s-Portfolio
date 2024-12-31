@@ -475,7 +475,7 @@ export default function AvatarExperience() {
     }
     playAnimation('Gunshoot');
 
-    const fileUrl = "https://drive.google.com/uc?export=download&id=1OX6E5KPLQGCOnDaZ_YuCo5qSUqS_EjW2";
+    const fileUrl = "https://drive.google.com/uc?export=download&id=1JtofSsdYRth4-fA6hEgSDxf1tGclg-Uz";
     const anchor = document.createElement('a');
     anchor.href = fileUrl;
     anchor.download = "Pugazh_Resume.pdf";
